@@ -21,7 +21,7 @@ def predict(model, class_names, img, true_label):
     img = np.array([img])
     print(img)
     #Replace these two lines with code to make a prediction
-    
+
     prediction = model.predict(img)
     #Determine what the predicted label is
     predicted_label = 0
@@ -59,6 +59,7 @@ def plot(class_names, prediction, true_label, predicted_label, img):
     plt.xticks([])
     plt.yticks([])
     plt.imshow(img, cmap=plt.cm.binary)
+    plt.savefig('img.png')
     predicted_label = np.argmax(prediction)
     if predicted_label == true_label:
         color = 'blue'
