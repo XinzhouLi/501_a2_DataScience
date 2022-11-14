@@ -1,3 +1,4 @@
+# Stage1
 ## Dataset
 I will be using the dataset on grade found at kaggle with a license of Public Domain Dedication
 [original website](https://www.kaggle.com/datasets/aljarah/xAPI-Edu-Data)
@@ -26,7 +27,7 @@ Third graph shows the the evaluation of the parents to school. From this we can 
 
 ![alt 属性文本](figure3.png)
 
-
+# Stage2
 ## Student behavior training
 In this part, I need to choose 5 significant data as input of neural network. so I choose the absenceDays, Discussion, AnnouncementsView , VisITedResources, raisedhands. Those five feature will reflect if a student would like to participate in the class. In another word, if they do not like to participate during class, they would not like to get a great grade in this class. The output is final grade that the students get in this class. 
 #### Splitting data
@@ -37,7 +38,12 @@ I choose the CNN model for training this data. since the first part is also doin
 On this basis, I did not change any hyper-parameter, all the hyper-parameters stay the same.
 #### Accuracy 
 After improve the hyper-parameter, the model can reach 77.4% for Train set, and 74% for Test set
-
+```python
+13/13 - 0s - loss: 0.5253 - accuracy: 0.7739 - 144ms/epoch - 11ms/step
+4/4 - 0s - loss: 0.6290 - accuracy: 0.7500 - 25ms/epoch - 6ms/step
+Train / Test Accuracy: 77.4% / 75.0%
+```
+# Stage3
 ## Data visualizaion
 ![alt 属性文本](s3figure1.png)
 ![alt 属性文本](s3figure2.png)
@@ -53,4 +59,32 @@ then increase the epochs to 50 to better learning the features of the dataset
 ```python
 model.fit(x_train, y_train, epochs=50, verbose=1)
 ```
-Those two modification helps the model increase accuracy from 75% to 80%.
+Those two modification helps the model increase accuracy from 75% to 76%.
+``` python
+--Evaluate model--
+13/13 - 0s - loss: 0.5587 - accuracy: 0.7663 - 162ms/epoch - 12ms/step
+4/4 - 0s - loss: 0.6733 - accuracy: 0.7600 - 24ms/epoch - 6ms/step
+Train / Test Accuracy: 76.6% / 76.0%
+```
+# Stage4
+## Improvement model
+First I convert some text data to numerical data, and send them to training.
+``` python 
+data['ParentAnsweringSurvey_flaged'] = data['ParentAnsweringSurvey'].apply(convert_ParentAnsweringSurvey)
+data['ParentschoolSatisfaction_flaged'] = data['ParentschoolSatisfaction'].apply(convert_ParentschoolSatisfaction)
+data['StageID_flaged'] = data['StageID'].apply(convert_StageID)
+data['Gender_flaged'] = data['gender'].apply(convert_gender)
+input_data = data.loc[:,['absenceDays_flaged','Discussion','AnnouncementsView','VisITedResources','raisedhands','ParentAnsweringSurvey_flaged','ParentschoolSatisfaction_flaged','StageID_flaged','Gender_flaged']]
+```
+## Improvement for over fitting problem
+Then I use the same avoiding overfitting method in heart desese part which use mutil-dense layer and random drop out stritage. All the hyper-parameter stays the same
+``` python
+model.add(tf.keras.layers.Dense(512, activation = "relu", use_bias= True, kernel_regularizer=tf.keras.regularizers.l2(0.0001)))
+model.add(tf.keras.layers.Dropout(0.3))
+```
+## Result
+```python
+13/13 - 0s - loss: 0.4670 - accuracy: 0.8116 - 231ms/epoch - 18ms/step
+4/4 - 0s - loss: 0.5995 - accuracy: 0.7900 - 30ms/epoch - 7ms/step
+Train / Test Accuracy: 81.2% / 79.0%
+```
