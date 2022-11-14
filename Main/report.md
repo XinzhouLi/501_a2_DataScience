@@ -32,12 +32,15 @@ Third graph shows the the evaluation of the parents to school. From this we can 
 In this part, I need to choose 5 significant data as input of neural network. so I choose the absenceDays, Discussion, AnnouncementsView , VisITedResources, raisedhands. Those five feature will reflect if a student would like to participate in the class. In another word, if they do not like to participate during class, they would not like to get a great grade in this class. The output is final grade that the students get in this class. 
 #### Splitting data
 For splitting data, I just follow the usual practice, split 80% of whole dataset for training ,then 20% for testing.
+``` python
+x_train,x_test,y_train,y_test = train_test_split(input_data, true_label.values.ravel(),test_size=0.2,random_state=1)
+```
 #### model design
-I choose the CNN model for training this data. since the first part is also doing a classification task. Firstly I copy the previous network see if can fit this dataset. and i find out with the previous network it can reach 60% accuracy, 
+I choose the CNN model for training this data. since the first part is also doing a classification task. Firstly I copy the previous network from MNIST part see if can fit this dataset. and i find out with the previous network it can reach 60% accuracy, 
 #### Hyper-parameter
 On this basis, I did not change any hyper-parameter, all the hyper-parameters stay the same.
 #### Accuracy 
-After improve the hyper-parameter, the model can reach 77.4% for Train set, and 74% for Test set
+After improve the hyper-parameter, the model can reach 77.4% for Train set, and 75% for Test set
 ```python
 13/13 - 0s - loss: 0.5253 - accuracy: 0.7739 - 144ms/epoch - 11ms/step
 4/4 - 0s - loss: 0.6290 - accuracy: 0.7500 - 25ms/epoch - 6ms/step
@@ -51,7 +54,7 @@ From those two figures, it is easy to see that most of the student who get high 
 
 ## Improvement model
 
-Since in last I add one more convultion layer to help extract the feature, but in this model it seams can not make such modification, so i change the some hyper-parameter to imporve the accuracy of th model. I increase the learning rate and epochs 
+Since in last I add one more convolution layer to help extract the feature, but in this model it seams can not make such modification, so i change the some hyper-parameter to improve the accuracy of th model. I increase the learning rate to 0.005 and epochs to 50 to help the mdoel learn the feature of the data set.
 ```python
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.005), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 ```
@@ -68,7 +71,7 @@ Train / Test Accuracy: 76.6% / 76.0%
 ```
 # Stage4
 ## Improvement model
-First I convert some text data to numerical data, and send them to training.
+First I convert some text data to numerical data, and send them to training. I add 4 new input data, "ParentAnsweringSurvey", "StageID", "ParentschoolSatisfaction" and "gender" which are the potential factor that may affect the behavior of student
 ``` python 
 data['ParentAnsweringSurvey_flaged'] = data['ParentAnsweringSurvey'].apply(convert_ParentAnsweringSurvey)
 data['ParentschoolSatisfaction_flaged'] = data['ParentschoolSatisfaction'].apply(convert_ParentschoolSatisfaction)
@@ -77,7 +80,7 @@ data['Gender_flaged'] = data['gender'].apply(convert_gender)
 input_data = data.loc[:,['absenceDays_flaged','Discussion','AnnouncementsView','VisITedResources','raisedhands','ParentAnsweringSurvey_flaged','ParentschoolSatisfaction_flaged','StageID_flaged','Gender_flaged']]
 ```
 ## Improvement for over fitting problem
-Then I use the same avoiding overfitting method in heart desese part which use mutil-dense layer and random drop out stritage. All the hyper-parameter stays the same
+Then I use the same avoiding overfitting method in heart disease part which use mutil-dense layer and random drop out strategy. All the hyper-parameter stays the same
 ``` python
 model.add(tf.keras.layers.Dense(512, activation = "relu", use_bias= True, kernel_regularizer=tf.keras.regularizers.l2(0.0001)))
 model.add(tf.keras.layers.Dropout(0.3))

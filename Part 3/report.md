@@ -10,6 +10,7 @@ First I make several Dense layer and a large number of unit which make sure that
 model.add(tf.keras.layers.Dense(512, activation = "relu", use_bias= True, kernel_regularizer=tf.keras.regularizers.l2(0.0001)))
 model.add(tf.keras.layers.Dropout(0.3))
 ```
+reference: https://www.tensorflow.org/tutorials/keras/overfit_and_underfit
 
 ## Hyperparameter & Result
 Finally, I found that the best result that I can achieve is two dense layer with 500 and 10 unit and relu activation function. The learning rate set to 0.005.
